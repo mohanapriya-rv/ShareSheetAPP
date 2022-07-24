@@ -6,17 +6,17 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
-import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.mpcoding.sharesheetapp.databinding.FragmentFirstBinding
-import java.io.File
-import java.io.FileOutputStream
+import com.squareup.picasso.Picasso
 
 
 /**
@@ -45,11 +45,23 @@ class FirstFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        loadImageLogo(
+            binding.shareimage,
+            "https://cdn.fundsindia.com/prelogin/investment-solutions.webp?auto=format&fit=max&w=640"
+        )
         binding.buttonFirst.setOnClickListener {
             val bitmap = binding.shareimage.drawable.toBitmap()
             shareImageAndText(bitmap)
         }
+    }
+
+    private fun loadImageLogo(shareimage: ImageView, url: String) {
+        Log.d("imageUri", "" + url)
+        Picasso.get().load(url).noFade()
+            .placeholder(R.drawable.ic_test)
+            .error(R.drawable.ic_test)
+            .into(shareimage)
+
     }
 
 
@@ -85,22 +97,32 @@ class FirstFragment : Fragment() {
 
     @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
     private fun getImageToShare(bitmap: Bitmap): Uri {
-        val imagefolder = File(context?.cacheDir, "images")
-        var uri: Uri?
-        imagefolder.mkdirs()
-        val file = File(imagefolder, "shared_image.png")
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        uri = FileProvider.getUriForFile(
-            requireContext(),
-            "com.mpcoding.sharesheetapp.fileprovider",
-            file
+        val path = MediaStore.Images.Media.insertImage(
+            context?.contentResolver,
+            bitmap,
+            "Image Description",
+            null
         )
-
-        return uri!!
+        return Uri.parse(path)
     }
+//        val imagefolder = File(context?.cacheDir, "images")
+//        var uri: Uri?
+//        imagefolder.mkdirs()
+//        val file = File(imagefolder, "shared_image.png")
+//        val outputStream = FileOutputStream(file)
+//        bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSLESS, 100, outputStream)
+//        outputStream.flush()
+//        outputStream.close()
+//        uri = FileProvider.getUriForFile(
+//            requireContext(),
+//            "com.mpcoding.sharesheetapp.fileprovider",
+//            file
+//        )
+//
+//        return uri!!
+
+
+    // }
 
     override fun onDestroyView() {
         super.onDestroyView()
