@@ -1,5 +1,6 @@
 package com.mpcoding.sharesheetapp
 
+import android.content.ClipData
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
@@ -23,6 +25,8 @@ import java.io.FileOutputStream
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
+    private var selectedTab = 0
+    private val image: ImageView? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -31,7 +35,7 @@ class FirstFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,6 +51,7 @@ class FirstFragment : Fragment() {
             shareImageAndText(bitmap)
         }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun shareImageAndText(bitmap: Bitmap) {
@@ -69,14 +74,16 @@ class FirstFragment : Fragment() {
         // setting type to image
 
         // setting type to image
-        intent.type = "image/png"
-
+        intent.type = "image/webp"
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.clipData = ClipData.newRawUri(null, uri)
         // calling startactivity() to share
         startActivity(Intent.createChooser(intent, "Share Via"))
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
+
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
     private fun getImageToShare(bitmap: Bitmap): Uri {
         val imagefolder = File(context?.cacheDir, "images")
         var uri: Uri?

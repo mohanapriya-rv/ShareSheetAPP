@@ -3,11 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../layout/custom_preview.xml" value="0.10364583333333334" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.192" />
         <entry key="app/src/main/res/drawable/ic_baseline_notifications_active_24.xml" value="0.192" />
         <entry key="app/src/main/res/drawable/ic_group_78545__6_.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.176" />
+        <entry key="app/src/main/res/drawable/ic_tab_selected.xml" value="0.2875" />
+        <entry key="app/src/main/res/drawable/ic_tab_unselected.xml" value="0.2875" />
+        <entry key="app/src/main/res/drawable/ic_test.xml" value="0.255" />
+        <entry key="app/src/main/res/drawable/onboarding_tab_selector.xml" value="0.2875" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2821557971014493" />
+        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.28020833333333334" />
+        <entry key="app/src/main/res/layout/vpfragment.xml" value="0.2791666666666667" />
         <entry key="app/src/main/res/xml/paths.xml" value="0.28020833333333334" />
       </map>
     </option>
