@@ -1,11 +1,14 @@
 package com.mpcoding.sharesheetapp
 
 import android.content.ClipData
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +20,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.mpcoding.sharesheetapp.databinding.FragmentFirstBinding
 import com.squareup.picasso.Picasso
+import java.io.OutputStream
 
 
 /**
@@ -94,8 +98,6 @@ class FirstFragment : Fragment() {
 
     }
 
-
-    @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
     private fun getImageToShare(bitmap: Bitmap): Uri {
         val path = MediaStore.Images.Media.insertImage(
             context?.contentResolver,
@@ -104,6 +106,32 @@ class FirstFragment : Fragment() {
             null
         )
         return Uri.parse(path)
+    }
+    private fun getImageToShare1(bitmap: Bitmap): Uri? {
+        val values = ContentValues()
+        val downloadCollection = MediaStore.Files.getContentUri("external")
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        values.put("relative_path", Environment.DIRECTORY_DOWNLOADS)
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "img_${SystemClock.uptimeMillis()}")
+        val uri: Uri? =
+            context?.contentResolver?.insert(downloadCollection, values)
+        if (uri != null) {
+            saveImageToStream(bitmap, context?.contentResolver?.openOutputStream(uri))
+            context?.contentResolver?.update(uri, values, null, null)
+            return uri
+        }
+        return null
+    }
+
+    private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
+        if (outputStream != null) {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 //        val imagefolder = File(context?.cacheDir, "images")
 //        var uri: Uri?
